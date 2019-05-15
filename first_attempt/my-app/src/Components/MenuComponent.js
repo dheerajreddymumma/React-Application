@@ -18,7 +18,6 @@ import { Link } from 'react-router-dom';
     }
 
     const Menu = (props) => {
-        console.log('Hi Dude');
         const menu = props.dishes.map((dish) => {
             return (
 
