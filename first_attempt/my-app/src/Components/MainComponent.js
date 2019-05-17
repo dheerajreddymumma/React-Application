@@ -27,7 +27,6 @@ const DishWithId = (props) => {
 
 class Main extends Component {
   render() {
-    console.log('india');
     return (
       <div>
         <Header />
