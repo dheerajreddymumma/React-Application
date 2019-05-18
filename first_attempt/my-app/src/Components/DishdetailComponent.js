@@ -25,8 +25,9 @@ class CommentForm extends Component {
     }
 
     handleComment(values) {
+        this.props.addComment(this.props.dishId, values.rating, values.name, values.comment);
         this.toggleModal();
-        alert(JSON.stringify(values));
+        //alert(JSON.stringify(values));
         //event.preventDefault();
      }
 
@@ -106,12 +107,14 @@ function RenderDish({dish}) {
   return <div />;
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId, deleteComment }) {
     if (comments != null) {
         const allComments = comments.map(comment => {
                 return (
                     <div>
-                        <p>{comment.comment}</p>
+                        <p>{comment.comment} <Button className="close" data-dismiss="alert" aria-label="Close" onClick={() => deleteComment(comment.id)}>
+                        <span aria-hidden="true">&times;</span>
+                        </Button></p>
                         <p>{' '} -- {comment.author},{' '}
                             {new Intl.DateTimeFormat('en-US', {
                                 year: 'numeric',
@@ -127,7 +130,7 @@ function RenderComments({ comments }) {
             <div>
                 <h4>Comments</h4>
                 {allComments}
-                <CommentForm />
+                <CommentForm addComment={addComment} dishId={dishId}/>
             </div>
         );
     }
@@ -135,12 +138,11 @@ function RenderComments({ comments }) {
 }
 
 const DishDetail = props => {
-    console.log('Hey Hey');
+    console.log('hi');
     return (
         <div className="container">
             <div className="row">
                 <Breadcrumb>
-
                     <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
                     <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
                 </Breadcrumb>
@@ -154,7 +156,8 @@ const DishDetail = props => {
                     <RenderDish dish={props.dish} />
                 </div>
                 <div className="col-12 col-md-5 m-1">
-                    <RenderComments comments={props.comments} />
+                    <RenderComments comments={props.comments} addComment={props.addComment} dishId = {props.dish.id} 
+                    deleteComment={props.deleteComment}/>
                 </div>
             </div>
         </div>
