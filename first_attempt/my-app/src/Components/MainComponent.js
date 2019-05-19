@@ -8,13 +8,16 @@ import Contact from './ContactComponent';
 import About from './AboutComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { actions } from 'react-redux-form';
 
-import { addComment, deleteComment } from '../redux/ActionCreators';
+import { addComment, deleteComment, fetchDishes } from '../redux/ActionCreators';
 
 const mapDispatchToProps = dispatch => ({
   
     addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
-    deleteComment: (commentId) => dispatch(deleteComment(commentId))
+    deleteComment: (commentId) => dispatch(deleteComment(commentId)),
+    fetchDishes: () => {dispatch(fetchDishes())},
+    resetFeedbackForm: () => { dispatch(actions.reset('feedback'))}
   
   });
 
@@ -27,32 +30,39 @@ const mapStateToProps = state => {
   }
 }
 
-const DishWithId = (props) => {
-  console.log('hi');
+const DishWithId = props => {
   return(
-      <DishDetail dish={props.dishes.filter((dish) => dish.id === parseInt(props.match.params.dishId,10))[0]} 
+      <DishDetail dish={props.dishes.dishes.filter((dish) => dish.id === parseInt(props.match.params.dishId,10))[0]} 
         comments={props.comments.filter((comment) => comment.dishId === parseInt(props.match.params.dishId,10))} 
         addComment={props.addComment}
         deleteComment={props.deleteComment}
+        isLoading = {props.dishes.isLoading}
+        errMess={props.dishes.errMess}
         />
   );
 };
 
 class Main extends Component {
+  componentDidMount() {
+    this.props.fetchDishes();
+  }
+
   render() {
-    console.log('Hi');
     return (
       <div>
         <Header />
         <Switch>
-              <Route path='/home' render={(props) => <Home {...props} dish = {this.props.dishes.filter(dish => dish.featured)[0]}
+              <Route path='/home' render={(props) => <Home {...props} dish = {this.props.dishes.dishes.filter(dish => dish.featured)[0]}
               promotion = {this.props.promotions.filter(promotion => promotion.featured)[0]}
               leader = {this.props.leaders.filter(leader => leader.featured)[0]}
+              isLoading={this.props.dishes.isLoading}
+              errMess={this.props.dishes.errMess}
                />} />
-              <Route exact path='/menu' render={(props) => <Menu {...props} dishes={this.props.dishes}/>} />
+              <Route exact path='/menu' render={(props) => <Menu {...props} dishes={this.props.dishes.dishes} isLoading={this.props.dishes.isLoading}
+              errMess={this.props.dishes.errMess} />} />
               <Route path='/menu/:dishId' render={(props) => <DishWithId {...props} dishes={this.props.dishes} comments={this.props.comments} 
                                                               addComment={this.props.addComment} deleteComment={this.props.deleteComment}/>} />
-              <Route exact path='/contactus' component={Contact} />
+              <Route exact path='/contactus' component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
               <Route path='/aboutus' render={(props) => <About {...props} leaders={this.props.leaders} />} />
               <Redirect to="/home" />
         </Switch>

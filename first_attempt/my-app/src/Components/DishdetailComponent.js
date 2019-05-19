@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import { Card, CardImg, CardText, CardBody,
     CardTitle, Breadcrumb, BreadcrumbItem, Modal, ModalHeader, ModalBody, Label, Button,
-    Row, Col } from 'reactstrap';
+    Row } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
+import { Loading } from './LoadingComponent';
 
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
@@ -93,7 +94,7 @@ class CommentForm extends Component {
 }
 
 
-function RenderDish({dish}) {
+function RenderDish({dish, isLoading, errMess}) {
     if (dish != null)
         return (
             <Card>
@@ -101,8 +102,8 @@ function RenderDish({dish}) {
                 <CardBody>
                     <CardTitle>{dish.name}</CardTitle>
                     <CardText>{dish.description}</CardText>
-        </CardBody>
-      </Card>
+                </CardBody>
+            </Card>
         );
   return <div />;
 }
@@ -138,7 +139,25 @@ function RenderComments({ comments, addComment, dishId, deleteComment }) {
 }
 
 const DishDetail = props => {
-    console.log('hi');
+    if(props.isLoading) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
+    else if (props.errMess) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <h4>{props.errMess}</h4>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="container">
             <div className="row">
@@ -149,7 +168,7 @@ const DishDetail = props => {
                 <div className="col-12">
                     <h3>{props.dish.name}</h3>
                     <hr />
-                </div>                
+                </div>         
             </div>
             <div className="row">
                 <div className="col-12 col-md-5 m-1">
