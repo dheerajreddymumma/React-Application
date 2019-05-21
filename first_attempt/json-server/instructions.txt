@@ -1,0 +1,12 @@
+Instructions:
+
+json-server --watch db.json -p 3001 -d 2000
+
+http://localhost:3001/dishes
+http://localhost:3001/promotions
+http://localhost:3001/leaders
+http://localhost:3001/feedback
+
+Any resources that you put in a folder named public in the json-server folder above, will be served by the server at the following address: http://localhost:3001/.
+
+http://localhost:3001/images/<image name>.png

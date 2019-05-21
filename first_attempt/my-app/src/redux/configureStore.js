@@ -22,5 +22,3 @@ export const ConfigureStore = () => {
     );
     return store;
 }
-
-export let p = '10';
