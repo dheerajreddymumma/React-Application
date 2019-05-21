@@ -10,11 +10,11 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form';
 
-import { addComment, deleteComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators';
+import { deleteComment, fetchDishes, fetchComments, fetchPromos, postComment } from '../redux/ActionCreators';
 
 const mapDispatchToProps = dispatch => ({
   
-    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+    postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)),
     deleteComment: (commentId) => dispatch(deleteComment(commentId)),
     fetchDishes: () => {dispatch(fetchDishes())},
     resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
@@ -35,7 +35,7 @@ const DishWithId = props => {
   return(
       <DishDetail dish={props.dishes.dishes.filter((dish) => dish.id === parseInt(props.match.params.dishId,10))[0]} 
         comments={props.comments.comments.filter((comment) => comment.dishId === parseInt(props.match.params.dishId,10))} 
-        addComment={props.addComment}
+        postComment={props.postComment}
         deleteComment={props.deleteComment}
         isLoading = {props.dishes.isLoading}
         commentsErrMess={props.comments.errMess}
@@ -67,7 +67,7 @@ class Main extends Component {
               <Route exact path='/menu' render={(props) => <Menu {...props} dishes={this.props.dishes.dishes} isLoading={this.props.dishes.isLoading}
               errMess={this.props.dishes.errMess} />} />
               <Route path='/menu/:dishId' render={(props) => <DishWithId {...props} dishes={this.props.dishes} comments={this.props.comments} 
-                                                              addComment={this.props.addComment} deleteComment={this.props.deleteComment}/>} />
+                                                              postComment={this.props.postComment} deleteComment={this.props.deleteComment}/>} />
               <Route exact path='/contactus' component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
               <Route path='/aboutus' render={(props) => <About {...props} leaders={this.props.leaders} />} />
               <Redirect to="/home" />
