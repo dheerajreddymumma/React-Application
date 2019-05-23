@@ -1,0 +1,14 @@
+To create the project, we used the create-react-app. It can be installed globally using yarn global add create-react-app@1.5.2
+
+create-react-app <name_of_the_folder> to start the project
+
+You can install JSON server for your environment using: npm install json-server -g
+
+Now just go into the json-server folder and run the command:
+json-server --watch db.json -p 3001 -d 2000 to start the son server
+
+Later go to the my-app folder and type 
+yarn
+yarn start
+
+
